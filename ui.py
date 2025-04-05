@@ -21,7 +21,7 @@ def draw_start_screen(screen):
     screen.fill(WHITE)
     
     # Title
-    title_text = title_font.render("NUMEROSITY", True, BLUE)
+    title_text = title_font.render("NUMBERS IQ", True, BLUE)
     title_rect = title_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3))
     screen.blit(title_text, title_rect)
     

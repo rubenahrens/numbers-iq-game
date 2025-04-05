@@ -3,7 +3,7 @@ import time
 import math
 from assets import *
 
-class NumerosityGame:
+class NumbersIQGame:
     def __init__(self):
         self.reset_game()
     
@@ -42,9 +42,8 @@ class NumerosityGame:
         self.current_round += 1
         self.game_state = "play"
         
-        # Adjust round duration based on level (more difficult = less time)
-        # Starting from 20 seconds and decreasing by 1 second every 2 levels
-        self.round_duration = max(10, 20 - (self.level - 1) // 2)
+        # Keep time limit constant at 20 seconds for all levels
+        self.round_duration = 20
     
     def generate_round(self, difficulty):
         """Generate a new round with target number, operator, and available numbers."""

@@ -1,4 +1,4 @@
-# Numerosity
+# Numbers IQ Game
 
 [![Python](https://img.shields.io/badge/Python-3.6+-blue.svg)](https://www.python.org/)
 [![Pygame](https://img.shields.io/badge/Pygame-2.0+-green.svg)](https://www.pygame.org/)
@@ -7,12 +7,12 @@
 A fast-paced math puzzle game that challenges your mental arithmetic skills through engaging number combinations.
 
 <p align="center">
-  <img src="https://via.placeholder.com/800x600.png?text=Numerosity+Game" alt="Numerosity Game Screenshot" width="600"/>
+  <img src="https://via.placeholder.com/800x600.png?text=Numbers+IQ+Game" alt="Numbers IQ Game Screenshot" width="600"/>
 </p>
 
 ## 🎮 Game Overview
 
-Numerosity tests your ability to quickly identify number combinations that satisfy mathematical equations. Select numbers that, when combined with the given operator, equal the target value.
+Numbers IQ Game tests your ability to quickly identify number combinations that satisfy mathematical equations. Select numbers that, when combined with the given operator, equal the target value.
 
 **Features:**
 - Multiple operations: addition, subtraction, multiplication, and division
@@ -30,8 +30,8 @@ Numerosity tests your ability to quickly identify number combinations that satis
 ### Clone & Run
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/numerosity.git
-cd numerosity
+git clone https://github.com/rubenahrens/numbers-iq-game.git
+cd numbers-iq-game
 
 # Install dependencies
 pip install pygame
@@ -58,7 +58,7 @@ python main.py
 
 5. The game gets progressively harder as you score points
 
-## 🧠 Strategies to Excel at Numerosity
+## 🧠 Strategies to Excel at Numbers IQ Game
 
 ### General Techniques
 
@@ -110,8 +110,8 @@ The game increases in difficulty as you progress:
 | Level | Operations | Number Range | Time Limit |
 |-------|------------|--------------|------------|
 | 1-2   | +, ×       | 1-15         | 20s        |
-| 3-4   | +, -, ×    | 1-25         | 18s        |
-| 5+    | +, -, ×, ÷ | 1-40+        | 15s        |
+| 3-4   | +, -, ×    | 1-25         | 20s        |
+| 5+    | +, -, ×, ÷ | 1-40+        | 20s        |
 
 ## 💻 Project Structure
 
