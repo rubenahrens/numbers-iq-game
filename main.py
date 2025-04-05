@@ -1,19 +1,19 @@
 import pygame
 import sys
 from assets import *
-from game import NumerosityGame
+from game import NumbersIQGame
 import ui
 
 def main():
     # Initialize pygame
     pygame.init()
-    pygame.display.set_caption("Numerosity")
+    pygame.display.set_caption("Numbers IQ Game")
     
     # Create the screen with larger dimensions
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     
     # Create the game instance
-    game = NumerosityGame()
+    game = NumbersIQGame()
     
     # Main game loop
     clock = pygame.time.Clock()
