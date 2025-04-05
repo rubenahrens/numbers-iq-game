@@ -115,7 +115,12 @@ def draw_game_screen(screen, game):
     screen.blit(round_text, round_rect)
     
     # Draw timer
-    time_left = max(0, game.round_duration - (time.time() - game.round_start_time))
+    # If showing the result screen for an incorrect answer, freeze the timer at its last value
+    if game.game_state == "result" and game.last_result == "incorrect":
+        time_left = 0  # Show empty timer for incorrect answers
+    else:
+        time_left = max(0, game.round_duration - (time.time() - game.round_start_time))
+    
     timer_width = 400  # Wider timer bar
     timer_height = 25  # Taller timer bar
     timer_rect = pygame.Rect(SCREEN_WIDTH // 2 - timer_width // 2, 220, timer_width, timer_height)
@@ -130,7 +135,11 @@ def draw_game_screen(screen, game):
     pygame.draw.rect(screen, DARK_GRAY, timer_rect, 2)  # Border
     
     # Draw time left as text
-    time_text = small_font.render(f"{time_left:.1f}s", True, BLACK)
+    if game.game_state == "result" and game.last_result == "incorrect":
+        time_text = small_font.render("Time's up!", True, BLACK)
+    else:
+        time_text = small_font.render(f"{time_left:.1f}s", True, BLACK)
+    
     time_rect = time_text.get_rect(center=(SCREEN_WIDTH // 2, 220 + timer_height // 2))
     screen.blit(time_text, time_rect)
     
@@ -150,8 +159,18 @@ def draw_game_screen(screen, game):
     else:
         preview_text = "Select numbers..."
     
+    # Position the preview text at the bottom of the screen, well below any hexagons
+    # This ensures it never overlaps with the numbers, even with 3+ rows
     preview_render = small_font.render(preview_text, True, DARK_GRAY)
-    preview_rect = preview_render.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 170))
+    preview_rect = preview_render.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 80))
+    
+    # Draw a semi-transparent background behind the text for better readability
+    bg_rect = pygame.Rect(preview_rect.left - 20, preview_rect.top - 10, 
+                          preview_rect.width + 40, preview_rect.height + 20)
+    bg_surface = pygame.Surface((bg_rect.width, bg_rect.height), pygame.SRCALPHA)
+    bg_surface.fill((255, 255, 255, 180))
+    screen.blit(bg_surface, (bg_rect.left, bg_rect.top))
+    
     screen.blit(preview_render, preview_rect)
 
 def draw_result_screen(screen, game):
@@ -167,17 +186,46 @@ def draw_result_screen(screen, game):
     # Draw the result message
     if game.last_result == "correct":
         result_text = large_font.render("Correct!", True, GREEN)
+        result_rect = result_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3))
+        screen.blit(result_text, result_rect)
     else:
+        # For incorrect answers, show the message and the correct solution
         result_text = large_font.render("Incorrect!", True, RED)
+        result_rect = result_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3 - 40))
+        screen.blit(result_text, result_rect)
+        
+        # Show the correct answer
+        solution_text = medium_font.render("The correct answer was:", True, DARK_GRAY)
+        solution_rect = solution_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3 + 20))
+        screen.blit(solution_text, solution_rect)
+        
+        # Display the correct numbers
+        correct_nums = [str(game.available_numbers[i]) for i in game.correct_indices]
+        
+        # Format based on the operator
+        if game.operator == "plus":
+            correct_expr = " + ".join(correct_nums)
+        elif game.operator == "minus":
+            correct_expr = " - ".join(correct_nums)
+        elif game.operator == "times":
+            correct_expr = " × ".join(correct_nums)
+        elif game.operator == "divide":
+            correct_expr = " ÷ ".join(correct_nums)
+            
+        correct_expr_text = medium_font.render(correct_expr + f" = {game.target_number}", True, BLUE)
+        correct_expr_rect = correct_expr_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3 + 70))
+        screen.blit(correct_expr_text, correct_expr_rect)
     
-    result_rect = result_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3))
-    screen.blit(result_text, result_rect)
-    
-    # Draw the next button
+    # Draw the continue button (instead of "Next")
     pygame.draw.rect(screen, BLUE, next_button_rect, border_radius=10)
-    next_text = medium_font.render("Next", True, WHITE)
-    next_text_rect = next_text.get_rect(center=next_button_rect.center)
-    screen.blit(next_text, next_text_rect)
+    
+    if game.last_result == "correct":
+        button_text = medium_font.render("Next", True, WHITE)
+    else:
+        button_text = medium_font.render("I Understand", True, WHITE)
+        
+    button_text_rect = button_text.get_rect(center=next_button_rect.center)
+    screen.blit(button_text, button_text_rect)
 
 def draw_end_screen(screen, game):
     """Draw the end game screen."""
