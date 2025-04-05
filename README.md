@@ -7,7 +7,7 @@
 A fast-paced math puzzle game that challenges your mental arithmetic skills through engaging number combinations.
 
 <p align="center">
-  <img src="https://via.placeholder.com/800x600.png?text=Numbers+IQ+Game" alt="Numbers IQ Game Screenshot" width="600"/>
+  <img src="docs/screenshot.png" alt="Numbers IQ Game Screenshot" width="600"/>
 </p>
 
 ## 🎮 Game Overview
