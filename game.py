@@ -16,7 +16,7 @@ class NumerosityGame:
         self.game_state = "start"  # "start", "countdown", "play", "result", "end"
         self.countdown_start = 0
         self.round_start_time = 0
-        self.round_duration = 10  # seconds (base duration)
+        self.round_duration = 20  # seconds (base duration changed to 20)
         self.result_display_time = 0
         self.result_display_duration = 1.5  # seconds
         self.last_result = None  # "correct" or "incorrect"
@@ -42,7 +42,8 @@ class NumerosityGame:
         self.game_state = "play"
         
         # Adjust round duration based on level (more difficult = less time)
-        self.round_duration = max(5, 10 - (self.level - 1) // 2)
+        # Starting from 20 seconds and decreasing by 1 second every 2 levels
+        self.round_duration = max(10, 20 - (self.level - 1) // 2)
     
     def generate_round(self, difficulty):
         """Generate a new round with target number, operator, and available numbers."""
@@ -204,15 +205,18 @@ class NumerosityGame:
             for i, (x, y) in enumerate(self.hexagon_positions):
                 if self.point_in_hexagon(mouse_pos, (x, y), HEXAGON_RADIUS):
                     if i in self.selected_indices:
+                        # If deselecting a number
                         self.selected_indices.remove(i)
                     else:
+                        # If selecting a new number
                         self.selected_indices.append(i)
+                    
                     select_sound.play()
+                    
+                    # Automatically check the answer after each selection/deselection
+                    if self.selected_indices:
+                        self.check_answer_automatically()
                     return
-            
-            # Check for apply button click
-            if apply_button_rect.collidepoint(mouse_pos) and self.selected_indices:
-                self.check_answer()
         
         elif self.game_state == "result" and next_button_rect.collidepoint(mouse_pos):
             if self.current_round < self.max_rounds:
@@ -223,11 +227,12 @@ class NumerosityGame:
         elif self.game_state == "end" and play_again_button_rect.collidepoint(mouse_pos):
             self.reset_game()
     
-    def check_answer(self):
-        """Check if the selected numbers give the correct answer."""
+    def check_answer_automatically(self):
+        """Automatically check if the selected numbers give the correct answer or are invalid."""
         selected_numbers = [self.available_numbers[i] for i in self.selected_indices]
         result = self.calculate_result(selected_numbers, self.operator)
         
+        # If we have a valid result and it equals the target
         if result == self.target_number:
             self.last_result = "correct"
             correct_sound.play()
@@ -242,12 +247,45 @@ class NumerosityGame:
                 # Slower progression later
                 if self.score % 2 == 0:
                     self.level = min(self.level + 1, 10)
-        else:
+                    
+            self.game_state = "result"
+            self.result_display_time = time.time()
+            
+        # If the result is now impossible (for example, in a multiplication if product exceeds target)
+        elif self.is_answer_impossible(selected_numbers, result):
             self.last_result = "incorrect"
             wrong_sound.play()
+            self.game_state = "result"
+            self.result_display_time = time.time()
+    
+    def is_answer_impossible(self, selected_numbers, current_result):
+        """Check if it's impossible to reach the target with the current selections."""
+        if current_result is None:
+            return False
+            
+        if self.operator == "plus":
+            # For addition, if current sum already exceeds target, it's impossible
+            return current_result > self.target_number
+            
+        elif self.operator == "minus":
+            # For subtraction, if we have all numbers and result isn't target, it's wrong
+            # (Hard to determine otherwise without knowing order)
+            if len(selected_numbers) >= 2:
+                return current_result != self.target_number
+            return False
+            
+        elif self.operator == "times":
+            # For multiplication, if product already exceeds target, it's impossible
+            return current_result > self.target_number
+            
+        elif self.operator == "divide":
+            # For division, if we have all numbers and result isn't target, it's wrong
+            # (Hard to determine otherwise without knowing order)
+            if len(selected_numbers) >= 2:
+                return current_result != self.target_number
+            return False
         
-        self.game_state = "result"
-        self.result_display_time = time.time()
+        return False
     
     def update(self):
         """Update game state based on time."""

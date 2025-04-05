@@ -45,7 +45,6 @@ except:
     timer_sound = mixer.Sound(pygame.sndarray.array(pygame.Surface((1, 1))))
 
 # Button rectangles (adjusted for larger screen)
-apply_button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT - 120, 200, 60)
 next_button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 100, SCREEN_HEIGHT - 120, 200, 60)
 play_button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 120, SCREEN_HEIGHT // 2 + 60, 240, 70)
 play_again_button_rect = pygame.Rect(SCREEN_WIDTH // 2 - 150, SCREEN_HEIGHT // 2 + 120, 300, 70)

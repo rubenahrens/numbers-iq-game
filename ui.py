@@ -39,8 +39,8 @@ def draw_start_screen(screen):
     # Instructions
     instructions = [
         "Select numbers that equal the target when combined with the operator",
-        "You have a limited time for each round",
-        "Click 'Apply' to submit your answer",
+        "You have 20 seconds for each round",
+        "The game automatically checks your answer as you select numbers",
         "Game gets harder as you progress!"
     ]
     
@@ -100,11 +100,7 @@ def draw_game_screen(screen, game):
         num_rect = num_text.get_rect(center=(x, y))
         screen.blit(num_text, num_rect)
     
-    # Draw apply button
-    pygame.draw.rect(screen, GREEN, apply_button_rect, border_radius=10)
-    apply_text = medium_font.render("Apply", True, WHITE)
-    apply_text_rect = apply_text.get_rect(center=apply_button_rect.center)
-    screen.blit(apply_text, apply_text_rect)
+    # Apply button removed - game uses automatic checking instead
     
     # Draw score and level
     score_text = small_font.render(f"Score: {game.score}", True, DARK_GRAY)
@@ -138,12 +134,21 @@ def draw_game_screen(screen, game):
     time_rect = time_text.get_rect(center=(SCREEN_WIDTH // 2, 220 + timer_height // 2))
     screen.blit(time_text, time_rect)
     
-    # Draw selected numbers preview
-    preview_text = "Selected: "
+    # Selected numbers preview with expression
     if game.selected_indices:
-        preview_text += " ".join(str(game.available_numbers[i]) for i in game.selected_indices)
+        selected_nums = [str(game.available_numbers[i]) for i in game.selected_indices]
+        
+        # Display the expression based on the operator
+        if game.operator == "plus":
+            preview_text = " + ".join(selected_nums)
+        elif game.operator == "minus":
+            preview_text = " - ".join(selected_nums)
+        elif game.operator == "times":
+            preview_text = " × ".join(selected_nums)
+        elif game.operator == "divide":
+            preview_text = " ÷ ".join(selected_nums)
     else:
-        preview_text += "None"
+        preview_text = "Select numbers..."
     
     preview_render = small_font.render(preview_text, True, DARK_GRAY)
     preview_rect = preview_render.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT - 170))
