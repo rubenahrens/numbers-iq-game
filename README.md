@@ -146,7 +146,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## ✨ Credits
 
-Developed as a math-learning tool to improve mental arithmetic skills.
+Developed by Ruben Ahrens.
 
 ---
 
